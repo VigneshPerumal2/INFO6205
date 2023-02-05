@@ -6,9 +6,11 @@ package edu.neu.coe.info6205.sort.elementary;
 import edu.neu.coe.info6205.sort.BaseHelper;
 import edu.neu.coe.info6205.sort.Helper;
 import edu.neu.coe.info6205.sort.SortWithHelper;
+import edu.neu.coe.info6205.util.Benchmark_Timer;
 import edu.neu.coe.info6205.util.Config;
 
 import java.util.Random;
+import java.util.function.Consumer;
 
 public class InsertionSort<X extends Comparable<X>> extends SortWithHelper<X> {
 
@@ -61,7 +63,13 @@ public class InsertionSort<X extends Comparable<X>> extends SortWithHelper<X> {
         final Helper<X> helper = getHelper();
 
         // FIXME
-        for(int i=from+1; i<to; i++){    for(int j=i; j>from ; j--){        if(!helper.swapStableConditional(xs, j)) {            break;        }    }}
+        for (int i = from + 1; i < to; i++) {
+            for (int j = i; j > from; j--) {
+                if (!helper.swapStableConditional(xs, j)) {
+                    break;
+                }
+            }
+        }
     }
 
     public static final String DESCRIPTION = "Insertion sort";
@@ -88,10 +96,13 @@ public class InsertionSort<X extends Comparable<X>> extends SortWithHelper<X> {
         for (int i = 0; i < NUM_TESTS; i++) {
             int size = MIN_SIZE + i * SIZE_INCREMENT;
             Integer[] array = generateArray(size, orderType);
-            long start = System.currentTimeMillis();
-            InsertionSort.sort(array);
-            long end = System.currentTimeMillis();
-            System.out.println(String.format("Size: %d, Time: %d", size, end - start));
+            Consumer<Integer[]> insertionSort = a -> InsertionSort.sort(array);
+            Benchmark_Timer<Integer[]> bm = new Benchmark_Timer<>(orderType.toString(),
+                    a -> { return a; },
+                    insertionSort,
+                    a -> {});
+            double avgTime = bm.runFromSupplier(() -> array, 10);
+            System.out.println("Size: "+size+"  Avg Time : " + avgTime + " ms");
         }
     }
 
