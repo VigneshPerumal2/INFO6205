@@ -19,13 +19,13 @@ public class Main {
     public static void main(String[] args) {
         processArgs(args);
         int count = 2;
-        for(int x=0; x<5; x++) {
+        for(int x=0; x<6; x++) {
             int threadCount = count;
             count *= 2;
             ParSort.pool = new ForkJoinPool(threadCount);
             System.out.println("Degree of parallelism: " + ParSort.pool.getParallelism());
             Random random = new Random();
-            int[] array = new int[2000000];
+            int[] array = new int[1000000];
             ArrayList<Long> timeList = new ArrayList<>();
             for (int j = 1; j < 20; j++) {
                 ParSort.cutoff = 1000 * (j + 1);
